@@ -1,32 +1,27 @@
-# Maintainer: Przemyslaw Zoltowski <przemek zoltowski at gmail dot com>
+# Maintainer: Mathieu Arnold <mat@FreeBSD.org>
 
 pkgname=irrtoolset
-pkgver=5.0.1
+pkgver=5.1.3
 pkgrel=1
 pkgdesc="Suite of tools to operate with routing policies in RPSL format."
-arch=('i686' 'x86_64')
-url="http://irrtoolset.isc.org/"
+arch=('x86_64')
+url="https://github.com/irrtoolset/irrtoolset/"
 license=('custom')
 depends=('readline' 'gcc-libs')
 makedepends=('gcc' 'libtool' 'flex' 'bison')
-source=("ftp://ftp.isc.org/isc/IRRToolSet/IRRToolSet-${pkgver}/${pkgname}-${pkgver}.tar.gz" \
-        "patch-src_rpsl_Makefile.in" "patch-src_rpsl_object.cc")
-md5sums=('5b58387a30b5d31065057bdb877544dd'
-         '22e150b43026aa7e1854439d3f088453'
-         '19fe49424eba81beba81a9c37ae8efcf')
+source=("https://github.com/irrtoolset/irrtoolset/archive/release-$pkgver.tar.gz")
+sha256sums=("a3eff14c2574f21be5b83302549d1582e509222d05f7dd8e5b68032ff6f5874a")
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}-release-${pkgver}"
 
-  patch -Np0 -i "${srcdir}/patch-src_rpsl_Makefile.in"
-  patch -Np0 -i "${srcdir}/patch-src_rpsl_object.cc"
-
+  autoreconf -i
   ./configure --prefix=/usr
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}-release-${pkgver}"
 
   make DESTDIR="$pkgdir/" install
   mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"
